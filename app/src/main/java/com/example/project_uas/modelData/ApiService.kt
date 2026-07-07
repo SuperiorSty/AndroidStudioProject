@@ -70,4 +70,27 @@ interface ApiService {
         @Field("WaktuMinum") waktuMinum: String,
         @Field("StatusAktif") statusAktif: Int
     ): Response<ResponseKonfirmasi>
+
+    // --- RIWAYAT MINUM ---
+
+    @FormUrlEncoded
+    @POST("api.php?apicall=insertRiwayat")
+    suspend fun insertRiwayat(
+        @Field("ObatId") obatId: Int,
+        @Field("NamaObat") namaObat: String,
+        @Field("Dosis") dosis: String,
+        @Field("WaktuMinum") waktuMinum: String
+    ): Response<ResponseKonfirmasi>
+
+    @FormUrlEncoded
+    @POST("api.php?apicall=loadRiwayat")
+    suspend fun loadDataRiwayat(
+        @Field("ObatId") obatId: Int
+    ): Response<ResponseDataRiwayat>
+
+    @FormUrlEncoded
+    @POST("api.php?apicall=deleteRiwayat")
+    suspend fun deleteRiwayat(
+        @Field("IdRiwayat") idRiwayat: Int
+    ): Response<ResponseKonfirmasi>
 }

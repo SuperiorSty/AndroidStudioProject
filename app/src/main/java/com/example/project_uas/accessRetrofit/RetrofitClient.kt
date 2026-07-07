@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.project_uas.modelData.ApiService
 import com.example.project_uas.modelData.Obat
 import com.example.project_uas.modelData.Pengingat
+import com.example.project_uas.modelData.RiwayatMinum
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Retrofit
@@ -40,5 +41,6 @@ object RetrofitClient {
     interface RetrofitCallback {
         fun onObatLoaded(data: List<Obat>)
         fun onPengingatLoaded(data: List<Pengingat>)
+        fun onRiwayatLoaded(data: List<RiwayatMinum>)
     }
 }

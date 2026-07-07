@@ -17,6 +17,7 @@ import com.example.project_uas.adapterRecyclerView.AdapterReminder
 import com.example.project_uas.helper.AlarmHelper
 import com.example.project_uas.modelData.Obat
 import com.example.project_uas.modelData.Pengingat
+import com.example.project_uas.modelData.RiwayatMinum
 
 class ReminderActivity : AppCompatActivity(), 
     RetrofitClient.RetrofitCallback, 
@@ -97,6 +98,8 @@ class ReminderActivity : AppCompatActivity(),
     }
 
     override fun onObatLoaded(data: List<Obat>) {}
+
+    override fun onRiwayatLoaded(data: List<RiwayatMinum>) {}
 
     override fun onPengingatLoaded(data: List<Pengingat>) {
         runOnUiThread {

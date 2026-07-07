@@ -16,6 +16,7 @@ import com.example.project_uas.accessRetrofit.RetrofitClient
 import com.example.project_uas.adapterRecyclerView.AdapterRecycle
 import com.example.project_uas.modelData.Obat
 import com.example.project_uas.modelData.Pengingat
+import com.example.project_uas.modelData.RiwayatMinum
 
 class MainActivity : AppCompatActivity(),
     RetrofitClient.RetrofitCallback,
@@ -115,6 +116,10 @@ class MainActivity : AppCompatActivity(),
         // Callback untuk pengingat (bisa dikosongkan jika tidak dipakai di sini)
     }
 
+    override fun onRiwayatLoaded(data: List<RiwayatMinum>) {
+        // Callback untuk riwayat (bisa dikosongkan jika tidak dipakai di sini)
+    }
+
     override fun onEdit(obat: Obat) {
         etNama.setText(obat.nama_obat)
         etDosis.setText(obat.dosis)
@@ -135,6 +140,14 @@ class MainActivity : AppCompatActivity(),
         val intent = Intent(this, ReminderActivity::class.java)
         intent.putExtra("OBAT_ID", obat.id)
         intent.putExtra("OBAT_NAMA", obat.nama_obat)
+        startActivity(intent)
+    }
+
+    override fun onMinum(obat: Obat) {
+        val intent = Intent(this, ActivityMinum::class.java)
+        intent.putExtra("OBAT_ID", obat.id)
+        intent.putExtra("OBAT_NAMA", obat.nama_obat)
+        intent.putExtra("OBAT_DOSIS", obat.dosis)
         startActivity(intent)
     }
 }

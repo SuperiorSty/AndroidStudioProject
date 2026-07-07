@@ -18,6 +18,7 @@ class AdapterRecycle(
         fun onEdit(obat: Obat)
         fun onDelete(obat: Obat)
         fun onReminder(obat: Obat)
+        fun onMinum(obat: Obat)
     }
 
     inner class ObatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -28,6 +29,7 @@ class AdapterRecycle(
         val btnEdit: Button = itemView.findViewById(R.id.buttonEditObat)
         val btnDelete: Button = itemView.findViewById(R.id.buttonDeleteObat)
         val btnReminder: Button = itemView.findViewById(R.id.buttonReminderObat)
+        val btnMinum: Button = itemView.findViewById(R.id.buttonMinumObat)
 
         fun bind(obat: Obat) {
             tvNama.text = obat.nama_obat
@@ -38,6 +40,7 @@ class AdapterRecycle(
             btnEdit.setOnClickListener { listener.onEdit(obat) }
             btnDelete.setOnClickListener { listener.onDelete(obat) }
             btnReminder.setOnClickListener { listener.onReminder(obat) }
+            btnMinum.setOnClickListener { listener.onMinum(obat) }
         }
     }
 

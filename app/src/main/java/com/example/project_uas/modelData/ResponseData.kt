@@ -19,3 +19,12 @@ data class ResponseDataPengingat(
     @SerializedName("data")
     val data: List<Pengingat>?
 )
+
+data class ResponseDataRiwayat(
+    @SerializedName("error")
+    val error: Boolean,
+    @SerializedName("message")
+    val message: String?,
+    @SerializedName("data")
+    val data: List<RiwayatMinum>?
+)

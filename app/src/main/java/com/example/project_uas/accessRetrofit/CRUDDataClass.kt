@@ -8,6 +8,7 @@ import com.example.project_uas.MainActivity
 import com.example.project_uas.helper.AlarmHelper
 import com.example.project_uas.modelData.Obat
 import com.example.project_uas.modelData.Pengingat
+import com.example.project_uas.modelData.RiwayatMinum
 import kotlinx.coroutines.launch
 
 class CRUDDataClass (
@@ -175,6 +176,45 @@ class CRUDDataClass (
                 }
             } catch (e: Exception) {
                 Log.e("DeleteError", e.message.toString())
+            }
+        }
+    }
+
+    // --- CRUD RIWAYAT MINUM ---
+
+    fun getAllRiwayat(obatId: Int){
+        activity.lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.api.loadDataRiwayat(obatId)
+                if (response.isSuccessful){
+                    val responseBody = response.body()
+                    if (responseBody != null && !responseBody.error){
+                        callback.onRiwayatLoaded(responseBody.data ?: emptyList())
+                    } else {
+                        callback.onRiwayatLoaded(emptyList())
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("RetrofitError", "GetAllRiwayat: ${e.message}")
+                callback.onRiwayatLoaded(emptyList())
+            }
+        }
+    }
+
+    fun saveRiwayat(obatId: Int, namaObat: String, dosis: String, waktuMinum: String){
+        activity.lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.api.insertRiwayat(
+                    obatId, namaObat, dosis, waktuMinum
+                )
+                if (response.isSuccessful){
+                    response.body()?.let { res ->
+                        Toast.makeText(activity, res.message, Toast.LENGTH_LONG).show()
+                        if (!res.error) getAllRiwayat(obatId)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("ErrorSaveRiwayat", e.message.toString())
             }
         }
     }

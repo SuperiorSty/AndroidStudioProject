@@ -34,6 +34,14 @@
             android:name=".ReminderActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ActivityMinum"
+            android:exported="false" />
+
+        <activity
+            android:name=".ActivityRiwayat"
+            android:exported="false" />
+
         <!-- Daftarkan Receiver di dalam tag application -->
         <receiver
             android:name=".receiver.AlarmReceiver"
