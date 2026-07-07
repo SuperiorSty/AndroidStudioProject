@@ -5,9 +5,7 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.media.AudioAttributes
 import android.media.RingtoneManager
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.example.project_uas.R
 
@@ -16,46 +14,38 @@ class AlarmReceiver : BroadcastReceiver() {
         val namaObat = intent.getStringExtra("NAMA_OBAT") ?: "Obat"
         val id = intent.getIntExtra("ID_PENGINGAT", 0)
 
+        // 1. Tampilkan Notifikasi
         showNotification(context, id, "Waktunya Minum Obat", "Ayo minum obat: $namaObat")
+
+        // 2. Bunyikan Suara Alarm
+        playAlarmSound(context)
     }
 
     private fun showNotification(context: Context, id: Int, title: String, message: String) {
-        // Ganti ID channel ke 'v2' agar sistem membuat ulang pengaturan suaranya
-        val channelId = "alarm_obat_channel_v2"
+        val channelId = "alarm_obat_channel"
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // Ambil suara alarm default HP
-        val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-            ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId,
-                "Alarm Minum Obat",
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                description = "Channel untuk pengingat minum obat"
-                // Set agar channel ini menggunakan suara alarm
-                val audioAttributes = AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .build()
-                setSound(soundUri, audioAttributes)
-                enableVibration(true)
-            }
-            notificationManager.createNotificationChannel(channel)
-        }
+        // Karena minSdk 26, NotificationChannel langsung dibuat tanpa cek versi
+        val channel = NotificationChannel(channelId, "Pengingat Obat", NotificationManager.IMPORTANCE_HIGH)
+        notificationManager.createNotificationChannel(channel)
 
         val builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setCategory(NotificationCompat.CATEGORY_ALARM) // Menandai sebagai kategori alarm
-            .setSound(soundUri)
-            .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000)) // Getar
             .setAutoCancel(true)
 
         notificationManager.notify(id, builder.build())
+    }
+
+    private fun playAlarmSound(context: Context) {
+        try {
+            val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+                ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
+            RingtoneManager.getRingtone(context, alarmUri).play()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }

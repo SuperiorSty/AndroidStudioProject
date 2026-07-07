@@ -66,6 +66,7 @@ interface ApiService {
     @POST("api.php?apicall=updatePengingat")
     suspend fun updatePengingat(
         @Field("IdPengingat") idPengingat: Int,
+        @Field("ObatId") obatId: Int,
         @Field("WaktuMinum") waktuMinum: String,
         @Field("StatusAktif") statusAktif: Int
     ): Response<ResponseKonfirmasi>

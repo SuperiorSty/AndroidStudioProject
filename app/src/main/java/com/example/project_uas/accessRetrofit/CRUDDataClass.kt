@@ -103,7 +103,7 @@ class CRUDDataClass (
                     val responseBody = response.body()
                     if (responseBody != null && !responseBody.error){
                         val allData = responseBody.data ?: emptyList()
-                        // Filter hanya yang aktif (status_aktif == 1)
+                        // FILTER: Sesuai request, pengingat non-aktif (status_aktif == 0) tidak dimunculkan
                         val filteredData = allData.filter { it.obat_id == obatId && it.status_aktif == 1 }
                         callback.onPengingatLoaded(filteredData)
                     } else {
@@ -127,7 +127,7 @@ class CRUDDataClass (
                     response.body()?.let { res ->
                         Toast.makeText(activity, res.message, Toast.LENGTH_LONG).show()
                         if (!res.error) {
-                            AlarmHelper.setAlarm(activity, pengingat)
+                            // Setelah insert sukses, kita refresh list agar alarm dipasang dengan ID asli dari DB
                             getAllPengingat(pengingat.obat_id)
                         }
                     }
@@ -141,16 +141,20 @@ class CRUDDataClass (
     fun updatePengingat(pengingat: Pengingat){
         activity.lifecycleScope.launch {
             try {
+                // Mengirim parameter sesuai urutan di PHP: IdPengingat, ObatId, WaktuMinum, StatusAktif
                 val response = RetrofitClient.api.updatePengingat(
-                    pengingat.id, pengingat.waktu_minum, pengingat.status_aktif
+                    pengingat.id, pengingat.obat_id, pengingat.waktu_minum, pengingat.status_aktif
                 )
                 if (response.isSuccessful){
                     response.body()?.let { res ->
                         Toast.makeText(activity, res.message, Toast.LENGTH_LONG).show()
                         if (!res.error) {
-                            // Update alarm: batalkan yang lama, set yang baru (Helper akan handle jika status 0)
+                            // Update alarm di HP
                             AlarmHelper.cancelAlarm(activity, pengingat.id)
-                            AlarmHelper.setAlarm(activity, pengingat)
+                            if (pengingat.status_aktif == 1) {
+                                AlarmHelper.setAlarm(activity, pengingat)
+                            }
+                            // Refresh daftar (jika status 0 maka akan hilang dari daftar karena filter)
                             getAllPengingat(pengingat.obat_id)
                         }
                     }

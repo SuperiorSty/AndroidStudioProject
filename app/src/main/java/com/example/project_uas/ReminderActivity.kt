@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.project_uas.accessRetrofit.CRUDDataClass
 import com.example.project_uas.accessRetrofit.RetrofitClient
 import com.example.project_uas.adapterRecyclerView.AdapterReminder
+import com.example.project_uas.helper.AlarmHelper
 import com.example.project_uas.modelData.Obat
 import com.example.project_uas.modelData.Pengingat
 
@@ -51,10 +52,13 @@ class ReminderActivity : AppCompatActivity(),
 
         tvMedicineName.text = "Pengingat: $selectedMedicineName"
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        val mainView = findViewById<android.view.View>(R.id.main)
+        if (mainView != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(mainView) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                insets
+            }
         }
 
         reminderAdapter = AdapterReminder(listReminder, this)
@@ -74,28 +78,11 @@ class ReminderActivity : AppCompatActivity(),
                 return@setOnClickListener
             }
 
-            if (selectedObatId == -1) {
-                Toast.makeText(this, "ID Obat tidak valid", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
             if (mode == "Insert") {
-                val newReminder = Pengingat(
-                    id = 0,
-                    obat_id = selectedObatId,
-                    nama_obat = selectedMedicineName,
-                    waktu_minum = waktu,
-                    status_aktif = 1
-                )
+                val newReminder = Pengingat(0, selectedObatId, selectedMedicineName, waktu, 1)
                 crudData.savePengingat(newReminder)
             } else {
-                val updatedReminder = Pengingat(
-                    id = selectedReminderId,
-                    obat_id = selectedObatId,
-                    nama_obat = selectedMedicineName,
-                    waktu_minum = waktu,
-                    status_aktif = 1
-                )
+                val updatedReminder = Pengingat(selectedReminderId, selectedObatId, selectedMedicineName, waktu, 1)
                 crudData.updatePengingat(updatedReminder)
             }
             resetForm()
@@ -109,15 +96,16 @@ class ReminderActivity : AppCompatActivity(),
         btnSimpan.text = "Simpan Pengingat"
     }
 
-    override fun onObatLoaded(data: List<Obat>) {
-        // Not used here
-    }
+    override fun onObatLoaded(data: List<Obat>) {}
 
     override fun onPengingatLoaded(data: List<Pengingat>) {
         runOnUiThread {
             listReminder.clear()
             listReminder.addAll(data)
             reminderAdapter.updateData(listReminder)
+            
+            // Mengaktifkan kembali jadwal alarm di HP berdasarkan data terbaru
+            AlarmHelper.syncAlarms(this, data)
         }
     }
 
@@ -126,6 +114,7 @@ class ReminderActivity : AppCompatActivity(),
         mode = "Update"
         selectedReminderId = pengingat.id
         btnSimpan.text = "Update Waktu"
+        etWaktu.requestFocus()
     }
 
     override fun onDelete(pengingat: Pengingat) {
@@ -134,11 +123,11 @@ class ReminderActivity : AppCompatActivity(),
 
     override fun onSwitch(pengingat: Pengingat, isActive: Boolean) {
         val updatedReminder = Pengingat(
-            id = pengingat.id,
-            obat_id = pengingat.obat_id,
-            nama_obat = pengingat.nama_obat,
-            waktu_minum = pengingat.waktu_minum,
-            status_aktif = if (isActive) 1 else 0
+            pengingat.id, 
+            pengingat.obat_id, 
+            pengingat.nama_obat, 
+            pengingat.waktu_minum, 
+            if (isActive) 1 else 0
         )
         crudData.updatePengingat(updatedReminder)
     }
