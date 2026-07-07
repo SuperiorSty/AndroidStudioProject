@@ -101,6 +101,11 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        crudData.getAllObat()
+    }
+
     fun refresh() {
         etNama.setText("")
         etDosis.setText("")
