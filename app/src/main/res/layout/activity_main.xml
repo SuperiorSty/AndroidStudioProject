@@ -51,7 +51,12 @@
             android:id="@+id/buttonSimpanObat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/kotakupdate"
+            android:backgroundTint="@null"
+            app:backgroundTint="@null"
             android:text="Simpan Obat"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
             android:layout_marginTop="8dp"/>
 
         <androidx.recyclerview.widget.RecyclerView

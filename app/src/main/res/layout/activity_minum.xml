@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/textViewCatatMinum"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Catat Minum Obat"
@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/textViewNamaObatMinum"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Nama Obat"
@@ -33,7 +33,7 @@
 
     <TextView
         android:id="@+id/textViewDosisMinum"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Dosis"
@@ -44,10 +44,12 @@
 
     <Button
         android:id="@+id/buttonCatatMinum"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:background="@drawable/kotakcatatminum"
+        android:backgroundTint="@null"
+        app:backgroundTint="@null"
         android:text="Catat Minum"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
@@ -58,10 +60,12 @@
 
     <Button
         android:id="@+id/buttonKembaliMinum"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@drawable/kotakkembali"
+        android:backgroundTint="@null"
+        app:backgroundTint="@null"
         android:text="Kembali"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"

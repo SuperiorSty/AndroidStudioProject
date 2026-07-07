@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/textViewJudulRiwayat"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Riwayat Minum Obat"
@@ -21,7 +21,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewRiwayat"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@+id/buttonKembaliRiwayat"
@@ -31,10 +31,12 @@
 
     <Button
         android:id="@+id/buttonKembaliRiwayat"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:background="@drawable/kotakkembali"
+        android:backgroundTint="@null"
+        app:backgroundTint="@null"
         android:text="Kembali"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
