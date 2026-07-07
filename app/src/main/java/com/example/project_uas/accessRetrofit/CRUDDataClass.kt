@@ -103,8 +103,7 @@ class CRUDDataClass (
                     val responseBody = response.body()
                     if (responseBody != null && !responseBody.error){
                         val allData = responseBody.data ?: emptyList()
-                        // FILTER: Sesuai request, pengingat non-aktif (status_aktif == 0) tidak dimunculkan
-                        val filteredData = allData.filter { it.obat_id == obatId && it.status_aktif == 1 }
+                        val filteredData = allData.filter { it.obat_id == obatId }
                         callback.onPengingatLoaded(filteredData)
                     } else {
                         callback.onPengingatLoaded(emptyList())
@@ -127,7 +126,6 @@ class CRUDDataClass (
                     response.body()?.let { res ->
                         Toast.makeText(activity, res.message, Toast.LENGTH_LONG).show()
                         if (!res.error) {
-                            // Setelah insert sukses, kita refresh list agar alarm dipasang dengan ID asli dari DB
                             getAllPengingat(pengingat.obat_id)
                         }
                     }
@@ -141,7 +139,6 @@ class CRUDDataClass (
     fun updatePengingat(pengingat: Pengingat){
         activity.lifecycleScope.launch {
             try {
-                // Mengirim parameter sesuai urutan di PHP: IdPengingat, ObatId, WaktuMinum, StatusAktif
                 val response = RetrofitClient.api.updatePengingat(
                     pengingat.id, pengingat.obat_id, pengingat.waktu_minum, pengingat.status_aktif
                 )
@@ -149,12 +146,12 @@ class CRUDDataClass (
                     response.body()?.let { res ->
                         Toast.makeText(activity, res.message, Toast.LENGTH_LONG).show()
                         if (!res.error) {
-                            // Update alarm di HP
-                            AlarmHelper.cancelAlarm(activity, pengingat.id)
+                            // Sinkronisasi alarm (set jika aktif, cancel jika non-aktif)
                             if (pengingat.status_aktif == 1) {
                                 AlarmHelper.setAlarm(activity, pengingat)
+                            } else {
+                                AlarmHelper.cancelAlarm(activity, pengingat.id)
                             }
-                            // Refresh daftar (jika status 0 maka akan hilang dari daftar karena filter)
                             getAllPengingat(pengingat.obat_id)
                         }
                     }
