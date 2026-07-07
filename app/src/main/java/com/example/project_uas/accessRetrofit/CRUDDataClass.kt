@@ -182,10 +182,10 @@ class CRUDDataClass (
 
     // --- CRUD RIWAYAT MINUM ---
 
-    fun getAllRiwayat(obatId: Int){
+    fun getAllRiwayat(){
         activity.lifecycleScope.launch {
             try {
-                val response = RetrofitClient.api.loadDataRiwayat(obatId)
+                val response = RetrofitClient.api.loadDataRiwayat()
                 if (response.isSuccessful){
                     val responseBody = response.body()
                     if (responseBody != null && !responseBody.error){
@@ -210,7 +210,7 @@ class CRUDDataClass (
                 if (response.isSuccessful){
                     response.body()?.let { res ->
                         Toast.makeText(activity, res.message, Toast.LENGTH_LONG).show()
-                        if (!res.error) getAllRiwayat(obatId)
+                        if (!res.error) getAllRiwayat()
                     }
                 }
             } catch (e: Exception) {

@@ -13,6 +13,7 @@ import com.example.project_uas.accessRetrofit.RetrofitClient
 import com.example.project_uas.modelData.Obat
 import com.example.project_uas.modelData.Pengingat
 import com.example.project_uas.modelData.RiwayatMinum
+import com.example.project_uas.modelData.ResponseKonfirmasi
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -28,6 +29,8 @@ class ActivityMinum : AppCompatActivity() {
     private var obatId: Int = -1
     private var obatNama: String = ""
     private var obatDosis: String = ""
+    private var obatStok: Int = 0
+    private var obatCatatan: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +40,8 @@ class ActivityMinum : AppCompatActivity() {
         obatId = intent.getIntExtra("OBAT_ID", -1)
         obatNama = intent.getStringExtra("OBAT_NAMA") ?: "Obat"
         obatDosis = intent.getStringExtra("OBAT_DOSIS") ?: "-"
+        obatStok = intent.getIntExtra("OBAT_STOK", 0)
+        obatCatatan = intent.getStringExtra("OBAT_CATATAN") ?: ""
 
         crudData = CRUDDataClass(this, object : RetrofitClient.RetrofitCallback {
             override fun onObatLoaded(data: List<Obat>) {}
@@ -65,8 +70,12 @@ class ActivityMinum : AppCompatActivity() {
             val waktuMinum = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
             crudData.saveRiwayat(obatId, obatNama, obatDosis, waktuMinum)
 
+            if (obatStok > 0) {
+                val updatedObat = Obat(obatId, obatNama, obatDosis, obatStok - 1, obatCatatan)
+                crudData.updateObat(updatedObat)
+            }
+
             val intent = Intent(this, ActivityRiwayat::class.java)
-            intent.putExtra("OBAT_ID", obatId)
             startActivity(intent)
             finish()
         }

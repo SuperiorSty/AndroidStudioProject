@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var etStok: EditText
     private lateinit var etCatatan: EditText
     private lateinit var btnSimpan: Button
+    private lateinit var btnRiwayat: Button
     private lateinit var rvObat: RecyclerView
 
     private lateinit var crudData: CRUDDataClass
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity(),
         etStok = findViewById(R.id.editTextStok)
         etCatatan = findViewById(R.id.editTextCatatan)
         btnSimpan = findViewById(R.id.buttonSimpanObat)
+        btnRiwayat = findViewById(R.id.buttonRiwayat)
         rvObat = findViewById(R.id.recyclerViewObat)
 
         // Penanganan System Bars (Edge to Edge)
@@ -91,6 +93,11 @@ class MainActivity : AppCompatActivity(),
                 crudData.updateObat(updatedObat)
             }
             refresh()
+        }
+
+        btnRiwayat.setOnClickListener {
+            val intent = Intent(this, ActivityRiwayat::class.java)
+            startActivity(intent)
         }
     }
 
@@ -148,6 +155,8 @@ class MainActivity : AppCompatActivity(),
         intent.putExtra("OBAT_ID", obat.id)
         intent.putExtra("OBAT_NAMA", obat.nama_obat)
         intent.putExtra("OBAT_DOSIS", obat.dosis)
+        intent.putExtra("OBAT_STOK", obat.stok_saat_ini)
+        intent.putExtra("OBAT_CATATAN", obat.catatan)
         startActivity(intent)
     }
 }

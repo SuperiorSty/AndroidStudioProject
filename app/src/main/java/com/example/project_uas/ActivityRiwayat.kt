@@ -49,9 +49,7 @@ class ActivityRiwayat : AppCompatActivity(), RetrofitClient.RetrofitCallback {
 
         crudData = CRUDDataClass(this, this)
 
-        if (obatId != -1) {
-            crudData.getAllRiwayat(obatId)
-        }
+        crudData.getAllRiwayat()
 
         btnKembali.setOnClickListener {
             finish()

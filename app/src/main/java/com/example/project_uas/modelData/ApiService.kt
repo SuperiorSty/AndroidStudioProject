@@ -84,9 +84,7 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("api.php?apicall=loadRiwayat")
-    suspend fun loadDataRiwayat(
-        @Field("ObatId") obatId: Int
-    ): Response<ResponseDataRiwayat>
+    suspend fun loadDataRiwayat(): Response<ResponseDataRiwayat>
 
     @FormUrlEncoded
     @POST("api.php?apicall=deleteRiwayat")
