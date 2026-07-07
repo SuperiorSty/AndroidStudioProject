@@ -32,6 +32,9 @@ class ReminderActivity : AppCompatActivity(),
 
     private var selectedObatId: Int = -1
     private var selectedMedicineName: String = ""
+    
+    private var mode = "Insert"
+    private var selectedReminderId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,15 +79,34 @@ class ReminderActivity : AppCompatActivity(),
                 return@setOnClickListener
             }
 
-            val newReminder = Pengingat(
-                id = 0,
-                obat_id = selectedObatId,
-                waktu_minum = waktu,
-                status_aktif = 1
-            )
-            crudData.savePengingat(newReminder)
-            etWaktu.setText("")
+            if (mode == "Insert") {
+                val newReminder = Pengingat(
+                    id = 0,
+                    obat_id = selectedObatId,
+                    nama_obat = selectedMedicineName,
+                    waktu_minum = waktu,
+                    status_aktif = 1
+                )
+                crudData.savePengingat(newReminder)
+            } else {
+                val updatedReminder = Pengingat(
+                    id = selectedReminderId,
+                    obat_id = selectedObatId,
+                    nama_obat = selectedMedicineName,
+                    waktu_minum = waktu,
+                    status_aktif = 1
+                )
+                crudData.updatePengingat(updatedReminder)
+            }
+            resetForm()
         }
+    }
+
+    private fun resetForm() {
+        etWaktu.setText("")
+        mode = "Insert"
+        selectedReminderId = -1
+        btnSimpan.text = "Simpan Pengingat"
     }
 
     override fun onObatLoaded(data: List<Obat>) {
@@ -100,14 +122,24 @@ class ReminderActivity : AppCompatActivity(),
     }
 
     override fun onEdit(pengingat: Pengingat) {
-        // Implementation for edit reminder if needed
+        etWaktu.setText(pengingat.waktu_minum)
+        mode = "Update"
+        selectedReminderId = pengingat.id
+        btnSimpan.text = "Update Waktu"
     }
 
     override fun onDelete(pengingat: Pengingat) {
-        // Implementation for delete reminder if needed
+        crudData.deletePengingat(pengingat.id, selectedObatId)
     }
 
     override fun onSwitch(pengingat: Pengingat, isActive: Boolean) {
-        // Implementation for toggling reminder status
+        val updatedReminder = Pengingat(
+            id = pengingat.id,
+            obat_id = pengingat.obat_id,
+            nama_obat = pengingat.nama_obat,
+            waktu_minum = pengingat.waktu_minum,
+            status_aktif = if (isActive) 1 else 0
+        )
+        crudData.updatePengingat(updatedReminder)
     }
 }

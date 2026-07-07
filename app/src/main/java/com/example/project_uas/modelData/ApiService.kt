@@ -55,4 +55,18 @@ interface ApiService {
     suspend fun loadDataPengingat(
         @Field("ObatId") obatId: Int
     ): Response<ResponseDataPengingat>
+
+    @FormUrlEncoded
+    @POST("api.php?apicall=deletePengingat")
+    suspend fun deletePengingat(
+        @Field("IdPengingat") idPengingat: Int
+    ): Response<ResponseKonfirmasi>
+
+    @FormUrlEncoded
+    @POST("api.php?apicall=updatePengingat")
+    suspend fun updatePengingat(
+        @Field("IdPengingat") idPengingat: Int,
+        @Field("WaktuMinum") waktuMinum: String,
+        @Field("StatusAktif") statusAktif: Int
+    ): Response<ResponseKonfirmasi>
 }

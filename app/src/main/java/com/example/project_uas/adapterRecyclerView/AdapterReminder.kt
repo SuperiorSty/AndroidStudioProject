@@ -31,6 +31,9 @@ class AdapterReminder(
         fun bind(pengingat: Pengingat) {
             tvWaktu.text = pengingat.waktu_minum
             tvStatus.text = if (pengingat.status_aktif == 1) "Status: Aktif" else "Status: Tidak Aktif"
+
+            // Penting: Hapus listener Switch sementara agar tidak terpicu saat set isChecked
+            swReminder.setOnCheckedChangeListener(null)
             swReminder.isChecked = pengingat.status_aktif == 1
 
             btnEdit.setOnClickListener { listener.onEdit(pengingat) }

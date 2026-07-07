@@ -17,8 +17,8 @@ import com.example.project_uas.adapterRecyclerView.AdapterRecycle
 import com.example.project_uas.modelData.Obat
 import com.example.project_uas.modelData.Pengingat
 
-class MainActivity : AppCompatActivity(), 
-    RetrofitClient.RetrofitCallback, 
+class MainActivity : AppCompatActivity(),
+    RetrofitClient.RetrofitCallback,
     AdapterRecycle.OnObatClickListener {
 
     private lateinit var etNama: EditText
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(),
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        // 1. Inisialisasi View (ID sesuai activity_main.xml yang baru)
+        // Inisialisasi View
         etNama = findViewById(R.id.editTextNamaObat)
         etDosis = findViewById(R.id.editTextDosis)
         etStok = findViewById(R.id.editTextStok)
@@ -48,24 +48,28 @@ class MainActivity : AppCompatActivity(),
         btnSimpan = findViewById(R.id.buttonSimpanObat)
         rvObat = findViewById(R.id.recyclerViewObat)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        // Penanganan System Bars (Edge to Edge)
+        val mainView = findViewById<android.view.View>(R.id.main)
+        if (mainView != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(mainView) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                insets
+            }
         }
 
-        // 2. Setup RecyclerView
+        // Setup RecyclerView
         obatAdapter = AdapterRecycle(listObat, this)
         rvObat.layoutManager = LinearLayoutManager(this)
         rvObat.adapter = obatAdapter
 
-        // 3. Inisialisasi CRUD
+        // Inisialisasi CRUD
         crudData = CRUDDataClass(this, this)
-        
-        // 4. Load Data Awal
+
+        // Load Data Awal
         crudData.getAllObat()
 
-        // 5. Listener Simpan
+        // Listener Simpan
         btnSimpan.setOnClickListener {
             val nama = etNama.text.toString()
             val dosis = etDosis.text.toString()
@@ -99,7 +103,6 @@ class MainActivity : AppCompatActivity(),
         btnSimpan.text = "Simpan Obat"
     }
 
-    // Callback dari RetrofitClient.RetrofitCallback
     override fun onObatLoaded(data: List<Obat>) {
         runOnUiThread {
             listObat.clear()
@@ -109,16 +112,15 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onPengingatLoaded(data: List<Pengingat>) {
-        // Implementasi jika ada pengingat nantinya
+        // Callback untuk pengingat (bisa dikosongkan jika tidak dipakai di sini)
     }
 
-    // Callback dari AdapterRecycle.OnObatClickListener
     override fun onEdit(obat: Obat) {
         etNama.setText(obat.nama_obat)
         etDosis.setText(obat.dosis)
         etStok.setText(obat.stok_saat_ini.toString())
         etCatatan.setText(obat.catatan)
-        
+
         mode = "Update"
         selectedObatId = obat.id
         btnSimpan.text = "Update Obat"
@@ -129,6 +131,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onReminder(obat: Obat) {
+        // Pastikan ReminderActivity sudah dibuat filenya
         val intent = Intent(this, ReminderActivity::class.java)
         intent.putExtra("OBAT_ID", obat.id)
         intent.putExtra("OBAT_NAMA", obat.nama_obat)
