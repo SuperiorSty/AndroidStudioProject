@@ -82,7 +82,6 @@ interface ApiService {
         @Field("WaktuMinum") waktuMinum: String
     ): Response<ResponseKonfirmasi>
 
-    @FormUrlEncoded
     @POST("api.php?apicall=loadRiwayat")
     suspend fun loadDataRiwayat(): Response<ResponseDataRiwayat>
 
